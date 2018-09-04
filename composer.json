@@ -1,0 +1,13 @@
+{
+    "name": "hihozhou/hertz",
+    "description": "PHP communication project based on swoole.",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "hihozhou",
+            "email": "hihozhou@gmail.com"
+        }
+    ],
+    "require": {}
+}
