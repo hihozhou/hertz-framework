@@ -1,15 +1,23 @@
 {
-    "name": "hihozhou/hertz",
-    "description": "PHP communication project based on swoole.",
-    "type": "project",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "hihozhou",
-            "email": "hihozhou@gmail.com"
-        }
-    ],
-    "require": {
-        "php": ">=7.0.0"
+  "name": "hihozhou/hertz",
+  "description": "PHP communication project based on swoole.",
+  "type": "project",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "hihozhou",
+      "email": "hihozhou@gmail.com"
     }
+  ],
+  "require": {
+    "php": ">=7.0.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "HihoZhou\\Hertz\\": "src/"
+    }
+  },
+  "require-dev": {
+    "eaglewu/swoole-ide-helper": "dev-master"
+  }
 }
