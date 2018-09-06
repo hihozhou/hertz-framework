@@ -16,6 +16,10 @@ class Container
 
     use Singleton;
 
+    /**
+     * 存储的容器
+     * @var array
+     */
     protected $values = [];
 
 
