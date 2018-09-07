@@ -2,7 +2,12 @@
 
 <?php
 
-use HihoZhou\Hertz\Container;
+echo "初始: " . memory_get_usage() . "B\n";
+
+
+//定义项目的跟目录
+//define('HERTZ_ROOT_PATH', realpath(getcwd()));
+
 
 //开发或开发包形式加载composer自动加载
 foreach ([__DIR__ . '/../../../autoload.php', __DIR__ . '/../vendor/autoload.php'] as $file) {
@@ -12,8 +17,14 @@ foreach ([__DIR__ . '/../../../autoload.php', __DIR__ . '/../vendor/autoload.php
     }
 }
 
-//Container::getInstance();
+//创建app容器
+$app = new \HihoZhou\Hertz\Application(
+    realpath(__DIR__ . '/../')
+);
 
+
+//Container::getInstance();
+$redis = new Redis();
 
 /**
  * 解析输入的命令
@@ -78,7 +89,6 @@ function commandHandler()
     list($command, $options) = commandParser();
     switch ($command) {
         case 'start':
-//            installCheck();
             serverStart($options);
             break;
         case 'stop':
@@ -98,17 +108,34 @@ function commandHandler()
  */
 function serverStart($options)
 {
-    $server = new swoole_websocket_server("127.0.0.1", 9501);
+
+    //todo 通过配置，配置服务器地址和端口
+    $server = new swoole_websocket_server(config('app.host'), config('app.port'));
     $server->on('open', function (swoole_websocket_server $server, $request) {
         echo "server: handshake success with fd{$request->fd}\n";
     });
     $server->on('message', function (swoole_websocket_server $server, $frame) {
-        echo "receive from {$frame->fd}:{$frame->data},opcode:{$frame->opcode},fin:{$frame->finish}\n";
-        $server->push($frame->fd, "This message is from swoole websocket server.");
+        switch ($frame->opcode) {
+            case WEBSOCKET_OPCODE_TEXT:
+                //todo 通过配置解析器
+                //todo 解析的到模块，控制器，方法
+                $data = json_decode($frame->data, true);
+                if ($data) {
+                    var_dump($data);
+                }
+                unset($data);
+                break;
+            case WEBSOCKET_OPCODE_BINARY;
+                break;
+        }
+//        echo "receive from {$frame->fd}:{$frame->data},opcode:{$frame->opcode},fin:{$frame->finish}\n";
+//        $server->push($frame->fd, "This message is from swoole websocket server.");
     });
     $server->on('close', function ($ser, $fd) {
         echo "client {$fd} closed\n";
     });
+    echo "使用: " . memory_get_usage() . "B\n";
+    echo "峰值: " . memory_get_peak_usage() . "B\n";
     $server->start();
 }
 
