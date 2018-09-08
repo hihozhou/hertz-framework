@@ -1,8 +1,15 @@
 {
   "name": "hihozhou/hertz-framework",
   "description": "The Hertz Framework.",
-  "keywords": ["framework", "hertz"],
+  "keywords": [
+    "framework",
+    "hertz"
+  ],
   "license": "MIT",
+  "support": {
+    "issues": "https://github.com/hihozhou/hertz-framework/issues",
+    "source": "https://github.com/hihozhou/hertz-framework"
+  },
   "authors": [
     {
       "name": "hihozhou",
@@ -28,5 +35,8 @@
   "require-dev": {
     "eaglewu/swoole-ide-helper": "dev-master"
   },
-  "minimum-stability": "dev"
+  "minimum-stability": "dev",
+  "bin": [
+    "bin/hertz"
+  ]
 }
