@@ -26,6 +26,7 @@ class Application extends Container
 
     public function __construct($basePath = null)
     {
+        var_dump($basePath);exit;
         $this->basePath = $basePath;
         $this->registerConfigBindings();
         $this->bootstrapContainer();

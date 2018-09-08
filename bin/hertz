@@ -7,7 +7,8 @@ echo "初始: " . memory_get_usage() . "B\n";
 
 //定义项目的跟目录
 
-
+define('EASYSWOOLE_ROOT', realpath(getcwd()));
+var_dump(EASYSWOOLE_ROOT);
 //开发或开发包形式加载composer自动加载
 foreach ([__DIR__ . '/../../../autoload.php', __DIR__ . '/../vendor/autoload.php'] as $file) {
     if (file_exists($file)) {
@@ -20,6 +21,12 @@ foreach ([__DIR__ . '/../../../autoload.php', __DIR__ . '/../vendor/autoload.php
 $app = new \HihoZhou\Hertz\Application(
     realpath(__DIR__ . '/../')
 );
+
+//$app->router->group([
+//    'namespace' => 'App\Http\Controllers',
+//], function ($router) {
+//    require __DIR__ . '/../routes/web.php';
+//});
 
 //$dispatcher = \FastRoute\simpleDispatcher(function ($r) {
 //    $routeOption = [
