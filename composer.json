@@ -1,5 +1,5 @@
 {
-  "name": "hihozhou/hertz",
+  "name": "hihozhou/hertz-framework",
   "description": "PHP communication project based on swoole.",
   "type": "project",
   "license": "MIT",
