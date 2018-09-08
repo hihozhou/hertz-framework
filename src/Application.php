@@ -2,6 +2,7 @@
 
 namespace HihoZhou\Hertz;
 
+use HihoZhou\Hertz\Routing\Router;
 use \Illuminate\Container\Container;
 use Illuminate\Config\Repository as ConfigRepository;
 
@@ -28,7 +29,8 @@ class Application extends Container
         $this->basePath = $basePath;
         $this->registerConfigBindings();
         $this->bootstrapContainer();
-        $this->configure('app');
+        $this->configure('app');//加载配置
+
     }
 
 
@@ -44,6 +46,7 @@ class Application extends Container
         $this->instance('app', $this);
 
     }
+
 
     /**
      * 重写容器make方法
@@ -134,6 +137,7 @@ class Application extends Container
 
     /**
      * Determine if the application is running in the console.
+     * 判断应用程序是否在控制台中运行。
      *
      * @return bool
      */
@@ -144,6 +148,7 @@ class Application extends Container
 
     /**
      * Get the base path for the application.
+     * 获取应用或对应文件跟目录
      *
      * @param  string|null $path
      *
@@ -162,5 +167,25 @@ class Application extends Container
         }
 
         return $this->basePath($path);
+    }
+
+
+    /**
+     * Create a FastRoute dispatcher instance for the application.
+     *
+     * @return
+     */
+    protected function createDispatcher(Router $router)
+    {
+//        return $this->dispatcher ? $this->dispatcher : \FastRoute\simpleDispatcher(function ($r) {
+//            foreach ($this->router->getRoutes() as $route) {
+//                $r->addRoute($route['method'], $route['uri'], $route['action']);
+//            }
+//        });
+        return $this->dispatcher ? $this->dispatcher : \FastRoute\simpleDispatcher(function ($r) use ($router) {
+            foreach ($router->getRoutes() as $route) {
+                $r->addRoute($route['method'], $route['uri'], $route['action']);
+            }
+        });
     }
 }

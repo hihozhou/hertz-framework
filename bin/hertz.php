@@ -6,7 +6,6 @@ echo "初始: " . memory_get_usage() . "B\n";
 
 
 //定义项目的跟目录
-//define('HERTZ_ROOT_PATH', realpath(getcwd()));
 
 
 //开发或开发包形式加载composer自动加载
@@ -22,9 +21,33 @@ $app = new \HihoZhou\Hertz\Application(
     realpath(__DIR__ . '/../')
 );
 
+//$dispatcher = \FastRoute\simpleDispatcher(function ($r) {
+//    $routeOption = [
+////            'middleware' => [],
+////            'prefix' => '',
+//        'method' => 'GET',
+//        'uri' => '/index/haha',
+//        'namespace' => "\\App\\Http\\Controllers\\",
+//        'controller' => "IndexController",
+//        'action' => "haha",
+//    ];
+//    $r->addRoute($routeOption['method'], $routeOption['uri'], $routeOption);
+//});
+//var_dump($dispatcher->dispatch('GET','/index/haha'));exit;
+//todo 注册路由
+// 添加路由，注册所有路由规则
+//$route = new \HihoZhou\Hertz\Routing\Router($app);
+//$route->addRoute('GET','/haha','IndexController@haha');
+//var_dump($route);exit;
 
-//Container::getInstance();
-$redis = new Redis();
+
+//路由调度
+
+//todo 路由区分web和api和socket
+//todo 路由注入到容器中
+
+
+//$redis = new Redis();
 
 /**
  * 解析输入的命令
@@ -109,25 +132,28 @@ function commandHandler()
 function serverStart($options)
 {
 
-    //todo 通过配置，配置服务器地址和端口
+    //通过配置，配置服务器地址和端口
     $server = new swoole_websocket_server(config('app.host'), config('app.port'));
+//    $server = new swoole_websocket_server('0.0.0.0', 9501);
     $server->on('open', function (swoole_websocket_server $server, $request) {
         echo "server: handshake success with fd{$request->fd}\n";
     });
     $server->on('message', function (swoole_websocket_server $server, $frame) {
-        switch ($frame->opcode) {
-            case WEBSOCKET_OPCODE_TEXT:
-                //todo 通过配置解析器
-                //todo 解析的到模块，控制器，方法
-                $data = json_decode($frame->data, true);
-                if ($data) {
-                    var_dump($data);
-                }
-                unset($data);
-                break;
-            case WEBSOCKET_OPCODE_BINARY;
-                break;
-        }
+        $server->push($frame->fd, "This message is from swoole websocket server.");
+//        $server->push($frame->fd, "This message is from swoole websocket server.");
+//        switch ($frame->opcode) {
+//            case WEBSOCKET_OPCODE_TEXT:
+//                //todo 通过配置解析器
+//                //todo 解析的到模块，控制器，方法
+//                $data = json_decode($frame->data, true);
+//                if ($data) {
+//                    var_dump($data);
+//                }
+//                unset($data);
+//                break;
+//            case WEBSOCKET_OPCODE_BINARY;
+//                break;
+//        }
 //        echo "receive from {$frame->fd}:{$frame->data},opcode:{$frame->opcode},fin:{$frame->finish}\n";
 //        $server->push($frame->fd, "This message is from swoole websocket server.");
     });
