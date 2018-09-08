@@ -1,7 +1,7 @@
 {
   "name": "hihozhou/hertz-framework",
-  "description": "PHP communication project based on swoole.",
-  "type": "project",
+  "description": "The Hertz Framework.",
+  "keywords": ["framework", "hertz"],
   "license": "MIT",
   "authors": [
     {
@@ -27,5 +27,6 @@
   },
   "require-dev": {
     "eaglewu/swoole-ide-helper": "dev-master"
-  }
+  },
+  "minimum-stability": "dev"
 }
