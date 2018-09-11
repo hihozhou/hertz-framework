@@ -2,18 +2,32 @@
 
 namespace HihoZhou\Hertz;
 
+use HihoZhou\Hertz\Concerns\RoutesRequests;
 use HihoZhou\Hertz\Routing\Router;
 use \Illuminate\Container\Container;
 use Illuminate\Config\Repository as ConfigRepository;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 
 class Application extends Container
 {
+    use RoutesRequests;
+
     /**
      * The base path of the application installation.
      *
      * @var string
      */
     protected $basePath;
+
+
+    /**
+     * The Router instance.
+     * 用于存放路由
+     *
+     * @var \HihoZhou\Hertz\Routing\Router
+     */
+    public $router;
 
     /**
      * All of the loaded configuration files.
@@ -26,11 +40,11 @@ class Application extends Container
 
     public function __construct($basePath = null)
     {
-        var_dump($basePath);exit;
         $this->basePath = $basePath;
         $this->registerConfigBindings();
         $this->bootstrapContainer();
         $this->configure('app');//加载配置
+        $this->bootstrapRouter();
 
     }
 
@@ -188,5 +202,38 @@ class Application extends Container
                 $r->addRoute($route['method'], $route['uri'], $route['action']);
             }
         });
+    }
+
+
+    /**
+     * Bootstrap the router instance.
+     *
+     * @return void
+     */
+    public function bootstrapRouter()
+    {
+        $this->router = new Router($this);
+    }
+
+
+    /**
+     * Prepare the given request instance for use with the application.
+     *
+     * @param  \Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return \Illuminate\Http\Request
+     */
+    protected function prepareRequest(SymfonyRequest $request)
+    {
+        if (!$request instanceof Request) {
+            $request = Request::createFromBase($request);
+        }
+
+        $request->setUserResolver(function ($guard = null) {
+            return $this->make('auth')->guard($guard)->user();
+        })->setRouteResolver(function () {
+            return $this->currentRoute;
+        });
+
     }
 }
