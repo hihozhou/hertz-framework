@@ -11,7 +11,8 @@ use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 
 class Application extends Container
 {
-    use RoutesRequests;
+    use Concerns\RoutesRequests,
+        Concerns\RegistersExceptionHandlers;
 
     /**
      * The base path of the application installation.
