@@ -187,9 +187,10 @@ trait RoutesRequests
         if (!$request) {
             $request = Request::capture();
         }
-
+        //如果是ws请求，不需要注入到重启中
+//        if ($request->getMethod() != 'ws') {
         $this->instance(Request::class, $this->prepareRequest($request));
-
+//        }
         return [$request->getMethod(), '/' . trim($request->getPathInfo(), '/')];
     }
 

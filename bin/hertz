@@ -21,13 +21,6 @@ $app = new \HihoZhou\Hertz\Application(
     realpath(HERTZ_ROOT_PATH)
 );
 
-//引入路由配置文件进行注册路由
-$app->router->group([
-    'namespace' => 'App\Http\Controllers',
-], function ($router) {
-    require HERTZ_ROOT_PATH . '/routes/web.php';
-});
-
 
 //$app->router->group([
 //    'namespace' => 'App\Http\Controllers',
@@ -148,6 +141,12 @@ function serverStart($options)
     global $app;
     //通过配置，配置服务器地址和端口
     $server = new swoole_websocket_server(config('app.host'), config('app.port'));
+    //引入路由配置文件进行注册路由
+    $app->router->group([
+        'namespace' => 'App\Http\Controllers',
+    ], function ($router) use ($server) {
+        require HERTZ_ROOT_PATH . '/routes/web.php';
+    });
 //    $server = new swoole_websocket_server('0.0.0.0', 9501);
     $server->on('open', function (swoole_websocket_server $server, $request) {
         echo "server: handshake success with fd{$request->fd}\n";
@@ -161,12 +160,19 @@ function serverStart($options)
 //                //todo 通过配置解析器
 //                //todo 解析的到模块，控制器，方法
                 $data = json_decode($frame->data, true);
+                //{"uri":"/"}
                 if ($data) {
                     if (isset($data['uri'])) {
-                        $request = \Illuminate\Http\Request::capture();
+                        $request = \HihoZhou\Hertz\Http\Request::capture();
                         $request->setMethod('ws');
                         $request->server->set('REQUEST_URI', $data['uri']);
+                        $request->request->add($data);
+                        $request->request->set('frame_id', $frame->fd);
+                        $request->setSwooleServer($server);
+                        $request->setSwooleFrame($frame);
+//                        var_dump($request);
                         $app->dispatch($request);
+//                        $server->push($frame->fd, "This message is from swoole websocket server.");
                     }
                 }
                 break;

@@ -60,6 +60,7 @@ class Application extends Container
         static::setInstance($this);
 
         $this->instance('app', $this);
+        $this->registerContainerAliases();
 
     }
 
@@ -237,4 +238,84 @@ class Application extends Container
         });
 
     }
+
+
+    /**
+     * Register the core container aliases.
+     *
+     * @return void
+     */
+    protected function registerContainerAliases()
+    {
+        $this->aliases = [
+            'Illuminate\Contracts\Foundation\Application' => 'app',
+            'Illuminate\Contracts\Auth\Factory' => 'auth',
+            'Illuminate\Contracts\Auth\Guard' => 'auth.driver',
+            'Illuminate\Contracts\Cache\Factory' => 'cache',
+            'Illuminate\Contracts\Cache\Repository' => 'cache.store',
+            'Illuminate\Contracts\Config\Repository' => 'config',
+            'Illuminate\Container\Container' => 'app',
+            'Illuminate\Contracts\Container\Container' => 'app',
+            'Illuminate\Database\ConnectionResolverInterface' => 'db',
+            'Illuminate\Database\DatabaseManager' => 'db',
+            'Illuminate\Contracts\Encryption\Encrypter' => 'encrypter',
+            'Illuminate\Contracts\Events\Dispatcher' => 'events',
+            'Illuminate\Contracts\Hashing\Hasher' => 'hash',
+            'log' => 'Psr\Log\LoggerInterface',
+            'Illuminate\Contracts\Queue\Factory' => 'queue',
+            'Illuminate\Contracts\Queue\Queue' => 'queue.connection',
+            'request' => 'Illuminate\Http\Request',
+            'Laravel\Lumen\Routing\Router' => 'router',
+            'Illuminate\Contracts\Translation\Translator' => 'translator',
+            'Laravel\Lumen\Routing\UrlGenerator' => 'url',
+            'Illuminate\Contracts\Validation\Factory' => 'validator',
+            'Illuminate\Contracts\View\Factory' => 'view',
+        ];
+    }
+
+    /**
+     * The available container bindings and their respective load methods.
+     *
+     * @var array
+     */
+    public $availableBindings = [
+        'auth' => 'registerAuthBindings',
+        'auth.driver' => 'registerAuthBindings',
+        'Illuminate\Auth\AuthManager' => 'registerAuthBindings',
+        'Illuminate\Contracts\Auth\Guard' => 'registerAuthBindings',
+        'Illuminate\Contracts\Auth\Access\Gate' => 'registerAuthBindings',
+        'Illuminate\Contracts\Broadcasting\Broadcaster' => 'registerBroadcastingBindings',
+        'Illuminate\Contracts\Broadcasting\Factory' => 'registerBroadcastingBindings',
+        'Illuminate\Contracts\Bus\Dispatcher' => 'registerBusBindings',
+        'cache' => 'registerCacheBindings',
+        'cache.store' => 'registerCacheBindings',
+        'Illuminate\Contracts\Cache\Factory' => 'registerCacheBindings',
+        'Illuminate\Contracts\Cache\Repository' => 'registerCacheBindings',
+        'composer' => 'registerComposerBindings',
+        'config' => 'registerConfigBindings',
+        'db' => 'registerDatabaseBindings',
+        'Illuminate\Database\Eloquent\Factory' => 'registerDatabaseBindings',
+        'encrypter' => 'registerEncrypterBindings',
+        'Illuminate\Contracts\Encryption\Encrypter' => 'registerEncrypterBindings',
+        'events' => 'registerEventBindings',
+        'Illuminate\Contracts\Events\Dispatcher' => 'registerEventBindings',
+        'files' => 'registerFilesBindings',
+        'hash' => 'registerHashBindings',
+        'Illuminate\Contracts\Hashing\Hasher' => 'registerHashBindings',
+        'log' => 'registerLogBindings',
+        'Psr\Log\LoggerInterface' => 'registerLogBindings',
+        'queue' => 'registerQueueBindings',
+        'queue.connection' => 'registerQueueBindings',
+        'Illuminate\Contracts\Queue\Factory' => 'registerQueueBindings',
+        'Illuminate\Contracts\Queue\Queue' => 'registerQueueBindings',
+        'router' => 'registerRouterBindings',
+        'Psr\Http\Message\ServerRequestInterface' => 'registerPsrRequestBindings',
+        'Psr\Http\Message\ResponseInterface' => 'registerPsrResponseBindings',
+        'translator' => 'registerTranslationBindings',
+        'url' => 'registerUrlGeneratorBindings',
+        'validator' => 'registerValidatorBindings',
+        'Illuminate\Contracts\Validation\Factory' => 'registerValidatorBindings',
+        'view' => 'registerViewBindings',
+        'Illuminate\Contracts\View\Factory' => 'registerViewBindings',
+    ];
 }
